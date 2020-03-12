@@ -50,8 +50,10 @@ void eventInTheCar(int event) {
   case Eventos.HIT:
     alerta = "GOLPE POR ALCANCE";
     break;
+  default:
+    UIText = "";
   }
-
+  UIText = alerta;
   println("Se ha levantado la siguiente alerta: " + alerta + "\n Pero no hay dispositivo que nos escuche.");
 }
 
@@ -69,20 +71,19 @@ void testSensorEvent() {
   
   if (touchIsStarted) {  
     eventInTheCar(Eventos.TOUCH_EVENT);
+    alarm.play();
   } else if (accelerometer.x > 3.00 && accelerometer.z > 2.00) {
     eventInTheCar(Eventos.CAR_DISTURBANCE_EVENT);
+    alarm.play();
   } else if (light > 80.0) {
     eventInTheCar(Eventos.INTRUDER_EVENT);
-  } else if (proximity == 0 && finalizado) {
-    print(proximity);
-    finalizado = false;
-    camera.start();
-    if (camera.isStarted()) camera.savePhoto();
+    alarm.play();
+  } else if (proximity == 0) {
+    intruso = true;
     eventInTheCar(Eventos.PROXIMITY_EVENT);
-    delay(6000);
-    camera.stop();
-    finalizado = true;
+    alarm.play();
   } else if (latitude != 0 && longitude != 0 && altitude!=0 && accelerometer.x > 3.00 && accelerometer.z > 2.00) {
     eventInTheCar(Eventos.GPS_EVENT);
+    alarm.play();
   }
 }
